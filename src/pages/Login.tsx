@@ -2,7 +2,7 @@ import { GoogleAuthProvider } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { googleIcon } from '~/assets/icons';
 import config from '~/configs';
-import { toastError } from '~/hooks/useToast';
+import { toastError, toastWarning } from '~/hooks/useToast';
 import { addUser, checkUser, login } from '~/services/loginService';
 
 function Login() {
@@ -14,14 +14,15 @@ function Login() {
         const dataUser = await checkUser(res.user.uid);
         if (dataUser === undefined) {
           await addUser(res.user);
+          toastWarning('Hãy liên lạc với quản trị để được cấp quyền vào trang web này!');
         } else if (dataUser.role !== 1) {
-          return toastError('Bạn không có quyền vào trang này!');
+          return toastError('Hãy liên lạc với quản trị để được cấp quyền vào trang web này!');
         } else {
           return nav(config.routes.home);
         }
       });
     } catch (err) {
-      console.log(err);
+      return toastError('Có lỗi xảy ra!');
     }
   };
   return (
