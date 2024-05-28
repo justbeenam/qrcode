@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import config from '~/configs';
 
 function PublicRoutes({ user, children }: PublicRoutesProps) {
-  return user.uid === '' ? children : <Navigate to={config.routes.home} />;
+  return user.uid === '' || user.role !== 1 ? children : <Navigate to={config.routes.home} />;
 }
 
 export default memo(PublicRoutes);

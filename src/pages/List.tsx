@@ -104,8 +104,8 @@ function List() {
     }
   }, [searchValue, dataForms]);
 
-  const deleteQrCode = (so: any) => {
-    if (confirm(`Xoá qrcode số phù hiệu ${so}?`)) {
+  const deleteQrCode = (so: any, phuhieu: any) => {
+    if (confirm(`Xoá qrcode số phù hiệu ${phuhieu}?`)) {
       deleteDoc(doc(db, 'qrcodes', so))
         .then((_) => toastSuccess('Xoá thành công'))
         .catch((_) => toastError('Lỗi!'));
@@ -285,7 +285,7 @@ function List() {
                           <button
                             className="flex justify-center items-center p-[13px_16px]  bg-[#EE4266] text-white border-transparent border hover:border-[#EE4266] hover:bg-white hover:text-[#EE4266] rounded-md hover:shadow-lg  sm:p-[8px_10px] sm:text-[14px]"
                             role="button"
-                            onClick={() => deleteQrCode(data.id)}
+                            onClick={() => deleteQrCode(data.id, data.data().sph)}
                           >
                             Delete
                           </button>

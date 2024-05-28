@@ -2,6 +2,7 @@ import { GoogleAuthProvider } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { googleIcon } from '~/assets/icons';
 import config from '~/configs';
+import { toastError } from '~/hooks/useToast';
 import { addUser, checkUser, login } from '~/services/loginService';
 
 function Login() {
@@ -13,9 +14,12 @@ function Login() {
         const dataUser = await checkUser(res.user.uid);
         if (dataUser === undefined) {
           await addUser(res.user);
+        } else if (dataUser.role !== 1) {
+          return toastError('Bạn không có quyền vào trang này!');
+        } else {
+          return nav(config.routes.home);
         }
       });
-      nav(config.routes.home);
     } catch (err) {
       console.log(err);
     }
