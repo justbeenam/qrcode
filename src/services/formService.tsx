@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, setDoc, updateDoc } from 'firebase/firestore';
 
 import { db } from '~/configs/database';
 
@@ -11,9 +11,20 @@ export const addForm = async (form: any) => {
   }
 };
 export const addQrCode = async (form: any) => {
-  const formCollect = collection(db, 'qrcodes');
+  const qrDoc = doc(collection(db, 'qrcodes'));
   try {
-    await addDoc(formCollect, form);
+    await setDoc(qrDoc, {
+      sph: form.sph,
+      sgtvtc: form.sgtvtc,
+      bsx: form.bsx,
+      tdvkdvt: form.tdvkdvt,
+      ndcph: form.ndcph,
+      lph: form.lph,
+      nhh: form.nhh,
+      startDate: Date.now(),
+      dvvt: form.dvvt,
+      id: qrDoc.id,
+    });
   } catch (error) {
     console.error(error);
   }

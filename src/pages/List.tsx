@@ -80,7 +80,7 @@ function List() {
       if (!data.empty) {
         let form: formDataContent[] = [];
         data.forEach((va: any) => {
-          form.push(va);
+          form.push(va.data());
         });
         setDataForm(form);
       }
@@ -98,6 +98,8 @@ function List() {
               .includes(removeVietnameseAccents(searchValue).toLocaleLowerCase()),
         ),
       );
+      console.log(filtered, searchValue);
+
       setRenderData(filtered);
     } else {
       setRenderData(dataForms);
@@ -161,7 +163,6 @@ function List() {
       ndcph: event.target.ndcph.value,
       lph: event.target.lph.value,
       nhh: event.target.nhh.value,
-      startDate: Date.now(),
       dvvt: currentUser.uid,
     };
     addQrCode(formData)
@@ -177,7 +178,12 @@ function List() {
         toastSuccess('Tạo mã QR thành công');
         setShowQrCode({ data: formData, show: true });
       })
-      .catch((_) => toastError('Có lỗi xảy ra!'));
+      .catch((v) => {
+        console.log(v);
+
+        setLoading(false);
+        toastError('Có lỗi xảy ra!');
+      });
   };
 
   const handleDownLoadQR = () => {
@@ -257,25 +263,25 @@ function List() {
                   renderData.map((data: any, index) => (
                     <tr key={index} className="border-b border-neutral-200 sm:flex sm:flex-col ">
                       <td data-label="Số phù hiệu" scope="row" className="font-medium ">
-                        {data.data().sph}
+                        {data.sph}
                       </td>
 
                       <td data-label="Biển số xe" className="text-ellipsis overflow-hidden">
-                        {data.data().bsx}
+                        {data.bsx}
                       </td>
                       <td data-label="Ngày hết hạn" className="text-ellipsis overflow-hidden">
-                        {data.data().nhh}
+                        {new Date(data.nhh).toLocaleDateString()}
                       </td>
                       <td
                         data-label="Trạng thái phù hiệu"
-                        className={new Date(data.data().nhh) > new Date() ? 'text-green-600' : 'text-red-600'}
+                        className={new Date(data.nhh) > new Date() ? 'text-green-600' : 'text-red-600'}
                       >
-                        {new Date(data.data().nhh) > new Date() ? 'Còn hiệu lực' : ' Hết hiệu lực'}
+                        {new Date(data.nhh) > new Date() ? 'Còn hiệu lực' : ' Hết hiệu lực'}
                       </td>
-                      <td data-label="Ngày tạo">{new Date(data.data().startDate).toLocaleDateString()}</td>
+                      <td data-label="Ngày tạo">{new Date(data.startDate).toLocaleDateString()}</td>
                       <td data-label="QR Code" className="flex gap-2">
                         <Link
-                          to={`/viewqr/${encodeURIComponent(CryptoJS.AES.encrypt(JSON.stringify(data.data()), import.meta.env.VITE_KEY_HASH).toString())}`}
+                          to={`/viewqr/${encodeURIComponent(CryptoJS.AES.encrypt(JSON.stringify(data), import.meta.env.VITE_KEY_HASH).toString())}`}
                           className="button-19 sm:p-[8px_10px] sm:text-[14px]"
                           role="button"
                           state={'Preview'}
@@ -286,7 +292,7 @@ function List() {
                         <button
                           className="flex justify-center items-center p-[13px_16px]  bg-[#EE4266] text-white border-transparent border hover:border-[#EE4266] hover:bg-white hover:text-[#EE4266] rounded-md hover:shadow-lg  sm:p-[8px_10px] sm:text-[14px]"
                           role="button"
-                          onClick={() => deleteQrCode(data.id, data.data().sph)}
+                          onClick={() => deleteQrCode(data.id, data.sph)}
                         >
                           Delete
                         </button>
