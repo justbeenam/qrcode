@@ -65,16 +65,16 @@ function List() {
   // }, [searchValueUserAdmin, userAdmin]);
 
   useEffect(() => {
-    // let collectionForm;
-    // if (currentUser.email === import.meta.env.VITE_EMAIL_ADMIN) {
-    const collectionForm = query(collection(db, 'qrcodes'), orderBy('startDate', 'desc'));
-    // } else {
-    //   collectionForm = query(
-    //     collection(db, 'forms'),
-    //     // where('dvvt', '==', currentUser.uid),
-    //     orderBy('startDate', 'desc'),
-    //   );
-    // }
+    let collectionForm;
+    if (currentUser.email === import.meta.env.VITE_EMAIL_ADMIN) {
+      collectionForm = query(collection(db, 'qrcodes'), orderBy('startDate', 'desc'));
+    } else {
+      collectionForm = query(
+        collection(db, 'qrcodes'),
+        where('dvvt', '==', currentUser.uid),
+        orderBy('startDate', 'desc'),
+      );
+    }
 
     onSnapshot(collectionForm, (data) => {
       if (!data.empty) {
@@ -162,6 +162,7 @@ function List() {
       lph: event.target.lph.value,
       nhh: event.target.nhh.value,
       startDate: Date.now(),
+      dvvt: currentUser.uid,
     };
     addQrCode(formData)
       .then((_) => {
@@ -199,15 +200,15 @@ function List() {
             Quay lại
             <i></i>
           </Link> */}
-          {currentUser.email === import.meta.env.VITE_EMAIL_ADMIN && (
-            <button
-              className="flex justify-center items-center p-[10px_40px] xs:text-sm xs:p-[2px_5px] sm:p-[5px_10px] bg-[#6DC5D1] text-white border-transparent border hover:border-[#6DC5D1] hover:bg-white hover:text-[#6DC5D1] rounded-md hover:shadow-lg"
-              onClick={() => setShowManagerList(true)}
-            >
-              Thêm mã QR
-              <i></i>
-            </button>
-          )}
+          {/* {currentUser.email === import.meta.env.VITE_EMAIL_ADMIN && ( */}
+          <button
+            className="flex justify-center items-center p-[10px_40px] xs:text-sm xs:p-[2px_5px] sm:p-[5px_10px] bg-[#6DC5D1] text-white border-transparent border hover:border-[#6DC5D1] hover:bg-white hover:text-[#6DC5D1] rounded-md hover:shadow-lg"
+            onClick={() => setShowManagerList(true)}
+          >
+            Thêm mã QR
+            <i></i>
+          </button>
+          {/* )} */}
         </div>
         <button
           className="flex justify-center items-center p-[10px_40px] xs:text-sm xs:p-[2px_5px] sm:p-[5px_10px] bg-[#EE4266] text-white border-transparent border hover:border-[#EE4266] hover:bg-white hover:text-[#EE4266] rounded-md hover:shadow-lg"
@@ -281,15 +282,15 @@ function List() {
                         >
                           QR Code
                         </Link>
-                        {currentUser.email === import.meta.env.VITE_EMAIL_ADMIN && (
-                          <button
-                            className="flex justify-center items-center p-[13px_16px]  bg-[#EE4266] text-white border-transparent border hover:border-[#EE4266] hover:bg-white hover:text-[#EE4266] rounded-md hover:shadow-lg  sm:p-[8px_10px] sm:text-[14px]"
-                            role="button"
-                            onClick={() => deleteQrCode(data.id, data.data().sph)}
-                          >
-                            Delete
-                          </button>
-                        )}
+                        {/* {currentUser.email === import.meta.env.VITE_EMAIL_ADMIN && ( */}
+                        <button
+                          className="flex justify-center items-center p-[13px_16px]  bg-[#EE4266] text-white border-transparent border hover:border-[#EE4266] hover:bg-white hover:text-[#EE4266] rounded-md hover:shadow-lg  sm:p-[8px_10px] sm:text-[14px]"
+                          role="button"
+                          onClick={() => deleteQrCode(data.id, data.data().sph)}
+                        >
+                          Delete
+                        </button>
+                        {/* )} */}
                       </td>
                     </tr>
                   ))}
